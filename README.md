@@ -10,7 +10,7 @@ The source code of VSTimeMetrics is distributed under [MIT License](http://en.wi
 - functions for getting last, average and total measurement time
 - thread safe with read-write locks
 
-## usage example
+## Usage example
 
 ``` obj-c
 VSTimeMetrics *m = [VSTimeMetrics sharedInstance];
