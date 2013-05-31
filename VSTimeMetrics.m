@@ -57,9 +57,14 @@
 	return 0.f;
 }
 
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"%@ { start: %@, finish: %@ }", [super description], self.start, self.finish];
+}
+
 @end
 
-#pragma mark - VSTimeMetrics ()
+#pragma mark - VSTimeMetrics
 
 @interface VSTimeMetrics ()
 
@@ -222,8 +227,30 @@
 - (NSString *)measurementReport
 {
 	RLOCK_G;
+	NSDictionary *dict = self.measurements;
+	NSMutableString *result = [NSMutableString stringWithFormat:@"VSTimeMetrics report\n---\n\n"];
+	NSArray *keys = [dict allKeys];
+	NSDateFormatter *formatter = [[[NSDateFormatter alloc] init] autorelease];
+	[formatter setDateFormat:@"YYYY:MM:dd-HH:mm:ss.SSS"];
+	for (NSString *key in keys)
+	{
+		NSMutableString *reportForKey = [NSMutableString stringWithFormat:@"KEY %@:\n\n", key];
+		NSArray *array = dict[key];
+		NSTimeInterval total = 0.;
+		for (NSInteger i = 0; i < [array count]; i++)
+		{
+			VSDatePair *pair = array[i];
+			NSTimeInterval interval = [pair interval];
+			total += interval;
+			NSString *start = pair.start ? [formatter stringFromDate:pair.start] : @"(null)";
+			NSString *finish = pair.finish ? [formatter stringFromDate:pair.finish] : @"(null)";
+			NSString *s = [NSString stringWithFormat:@"%ld: start %@, finish %@, time %f\n", i, start, finish, interval];
+			[reportForKey appendString:s];
+		}
+		[result appendFormat:@"%@\n\ntotal: %f\naverage: %f\n\n", reportForKey, total, total / [array count]];
+	}
 	UNLOCK_G;
-	return @"";
+	return result;
 }
 
 #pragma mark - Private
