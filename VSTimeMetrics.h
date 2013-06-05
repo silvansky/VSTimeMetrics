@@ -14,6 +14,7 @@
 - (void)startMeasuringForKey:(NSString *)key;
 - (void)finishMeasuringForKey:(NSString *)key;
 - (void)resetMeasuringForKey:(NSString *)key;
+- (void)resetAllMeasurements;
 
 - (NSTimeInterval)lastMeasurementForKey:(NSString *)key;
 - (NSTimeInterval)totalMeasurementForKey:(NSString *)key;

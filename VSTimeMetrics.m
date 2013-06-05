@@ -165,6 +165,17 @@
 	UNLOCK(key);
 }
 
+- (void)resetAllMeasurements
+{
+	RLOCK_G;
+	NSArray *keys = [self.measurements allKeys];
+	UNLOCK_G;
+	for (NSString *key in keys)
+	{
+		[self resetMeasuringForKey:key];
+	}
+}
+
 - (NSTimeInterval)lastMeasurementForKey:(NSString *)key
 {
 	RLOCK_G;
